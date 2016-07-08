@@ -4,5 +4,8 @@
         <testsuite name="ZendSkeletonApplication Test Suite">
             <directory>./module/Application/test</directory>
         </testsuite>
+        <testsuite name="Album">
+            <directory>./module/Album/test</directory>
+        </testsuite>
     </testsuites>
 </phpunit>
