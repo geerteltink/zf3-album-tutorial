@@ -2,12 +2,16 @@
 namespace AlbumTest\Controller;
 
 use Album\Controller\AlbumController;
+use Album\Model\AlbumTable;
+use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
 class AlbumControllerTest extends AbstractHttpControllerTestCase
 {
     protected $traceError = true;
+
+    protected $albumTable;
 
     public function setUp()
     {
@@ -18,24 +22,44 @@ class AlbumControllerTest extends AbstractHttpControllerTestCase
         $configOverrides = [];
 
         $this->setApplicationConfig(ArrayUtils::merge(
-        // Grabbing the full application configuration:
             include __DIR__ . '/../../../../config/application.config.php',
             $configOverrides
         ));
 
         parent::setUp();
 
-        $services = $this->getApplicationServiceLocator();
-        $config   = $services->get('config');
-        unset($config['db']);
+        $this->configureServiceManager($this->getApplicationServiceLocator());
+    }
+
+    protected function configureServiceManager(ServiceManager $services)
+    {
         $services->setAllowOverride(true);
-        $services->setService('config', $config);
+
+        $services->setService('config', $this->updateConfig($services->get('config')));
+        $services->setService(AlbumTable::class, $this->mockAlbumTable()->reveal());
+
         $services->setAllowOverride(false);
+    }
+
+    protected function updateConfig($config)
+    {
+        $config['db'] = [];
+
+        return $config;
+    }
+
+    protected function mockAlbumTable()
+    {
+        $this->albumTable = $this->prophesize(AlbumTable::class);
+
+        return $this->albumTable;
     }
 
     public function testIndexActionCanBeAccessed()
     {
-        $this->dispatch('/album');
+        $this->albumTable->fetchAll()->willReturn([]);
+
+        $this->dispatch('/album', 'GET');
         $this->assertResponseStatusCode(200);
         $this->assertModuleName('Album');
         $this->assertControllerName(AlbumController::class);
