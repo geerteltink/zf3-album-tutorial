@@ -13,7 +13,7 @@ $this->headTitle($title);
         <th>Artist</th>
         <th>&nbsp;</th>
     </tr>
-    <?php foreach ($albums as $album) : ?>
+    <?php foreach ($this->paginator as $album) : // <-- change here! ?>
         <tr>
             <td><?= $this->escapeHtml($album->title) ?></td>
             <td><?= $this->escapeHtml($album->artist) ?></td>
