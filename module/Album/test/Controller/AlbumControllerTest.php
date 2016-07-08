@@ -6,6 +6,8 @@ use Album\Model\AlbumTable;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
+use Album\Model\Album;
+use Prophecy\Argument;
 
 class AlbumControllerTest extends AbstractHttpControllerTestCase
 {
@@ -65,5 +67,21 @@ class AlbumControllerTest extends AbstractHttpControllerTestCase
         $this->assertControllerName(AlbumController::class);
         $this->assertControllerClass('AlbumController');
         $this->assertMatchedRouteName('album');
+    }
+
+    public function testAddActionRedirectsAfterValidPost()
+    {
+        $this->albumTable
+            ->saveAlbum(Argument::type(Album::class))
+            ->shouldBeCalled();
+
+        $postData = [
+            'title'  => 'Led Zeppelin III',
+            'artist' => 'Led Zeppelin',
+            'id'     => '',
+        ];
+        $this->dispatch('/album/add', 'POST', $postData);
+        $this->assertResponseStatusCode(302);
+        $this->assertRedirectTo('/album');
     }
 }
