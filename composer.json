@@ -36,5 +36,8 @@
         "development-enable": "zf-development-mode enable",
         "development-status": "zf-development-mode status",
         "serve": "php -S 0.0.0.0:8080 -t public/ public/index.php"
+    },
+    "require-dev": {
+        "zendframework/zend-test": "^3.0"
     }
 }
