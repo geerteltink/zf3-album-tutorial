@@ -7,7 +7,7 @@ use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
 class AlbumControllerTest extends AbstractHttpControllerTestCase
 {
-    protected $traceError = false;
+    protected $traceError = true;
 
     public function setUp()
     {
@@ -22,7 +22,15 @@ class AlbumControllerTest extends AbstractHttpControllerTestCase
             include __DIR__ . '/../../../../config/application.config.php',
             $configOverrides
         ));
+
         parent::setUp();
+
+        $services = $this->getApplicationServiceLocator();
+        $config   = $services->get('config');
+        unset($config['db']);
+        $services->setAllowOverride(true);
+        $services->setService('config', $config);
+        $services->setAllowOverride(false);
     }
 
     public function testIndexActionCanBeAccessed()
