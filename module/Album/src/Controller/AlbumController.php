@@ -103,7 +103,7 @@ class AlbumController extends AbstractActionController
 
             if ($del == 'Yes') {
                 $id = (int) $request->getPost('id');
-                $this->getAlbumTable()->deleteAlbum($id);
+                $this->table->deleteAlbum($id);
             }
 
             // Redirect to list of albums
@@ -112,7 +112,7 @@ class AlbumController extends AbstractActionController
 
         return [
             'id'    => $id,
-            'album' => $this->getAlbumTable()->getAlbum($id),
+            'album' => $this->table->getAlbum($id),
         ];
     }
 }
