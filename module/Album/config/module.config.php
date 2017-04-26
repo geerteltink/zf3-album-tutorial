@@ -2,11 +2,13 @@
 
 namespace Album;
 
+use Zend\Router\Http\Segment;
+
 return [
     'router' => [
         'routes' => [
             'album' => [
-                'type'    => 'segment',
+                'type'    => Segment::class,
                 'options' => [
                     'route'       => '/album[/:action[/:id]]',
                     'constraints' => [
